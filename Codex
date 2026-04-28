@@ -1,0 +1,277 @@
+Create an autonomous Codex implementation prompt from the supplied milestone or roadmap document.
+
+Purpose:
+
+Convert the supplied roadmap/milestone/backlog document into a complete Codex-ready implementation prompt using the same Project443-DigitalTwin delivery pattern:
+
+- one milestone at a time
+- preserve security controls
+- run focused tests
+- run full test suite
+- commit and push after each milestone
+- continue automatically unless a defined stop condition is met
+- include mandatory security review gates where appropriate
+- include exact milestone-specific requirements from the supplied document
+
+Input document:
+
+Use the supplied milestone or roadmap document as the source of truth.
+
+Do not invent milestones that are not in the document.
+
+Do not omit milestones from the document.
+
+Do not water down security, testing, documentation, or acceptance criteria.
+
+Ask no follow-up questions unless the document is too ambiguous to produce a safe implementation prompt.
+
+Output required:
+
+Produce one complete copy/paste-ready prompt for Codex.
+
+The generated prompt must include the following sections:
+
+1. Title / opening instruction
+
+   Example:
+
+   Continue Project443-DigitalTwin <roadmap theme> milestone delivery autonomously.
+
+2. Working directory
+
+   Use this unless the input document specifies otherwise:
+
+   C:\dev\Project443-DigitalTwin\digital-twin-starter
+
+3. Primary objective
+
+   Summarise what the milestone set is intended to implement.
+
+4. Source of truth
+
+   Name the supplied roadmap/milestone document.
+
+5. Scope boundary
+
+   Include:
+
+   This is Project443-DigitalTwin work.
+
+   Do not make changes in:
+
+   C:\dev\Project443-DigitalTwin\Transcripty
+
+   Do all work only in:
+
+   C:\dev\Project443-DigitalTwin\digital-twin-starter
+
+6. Milestone order
+
+   Extract every milestone from the document in order.
+
+   Include:
+
+   - milestone number
+   - milestone title
+   - backlog/source ID if present
+
+7. Continuation behaviour
+
+   Include strong instructions that Codex must not stop after one, two, or three milestones.
+
+   Include:
+
+   A completion summary is not the end of the task. A completion summary is only a checkpoint before immediately starting the next milestone.
+
+   A security review summary is not the end of the task. A security review summary is only a checkpoint before immediately starting the next milestone, provided continuation is approved.
+
+8. Stop conditions
+
+   Include:
+
+   - all milestones complete
+   - full test suite failure cannot be fixed safely
+   - requirement missing or ambiguous enough that implementation would be guesswork
+   - git push fails due to remote conflicts or authentication
+   - major architecture decision required outside the roadmap
+   - proposed implementation would weaken completed security controls
+   - security review identifies a Critical or High finding that cannot be fixed safely without clarification
+
+9. Non-stop conditions
+
+   Include:
+
+   Do not stop merely because:
+
+   - one milestone is finished
+   - two or three milestones are finished
+   - five milestones are finished
+   - a security review was completed
+   - a full test suite passed
+   - a commit was created
+   - a push succeeded
+   - a completion note was written
+   - the next milestone was selected
+
+   Those are continue conditions, not stop conditions.
+
+10. Pre-flight instructions
+
+   Include:
+
+   - git status
+   - confirm working directory
+   - confirm remote
+   - read the supplied roadmap
+   - identify last completed milestone
+   - check whether previous committed milestone had a passing full test suite
+   - run baseline only if needed
+
+11. No repeated baseline rule
+
+   Include the existing rule:
+
+   Do not run another full baseline `python -m pytest` before starting the next milestone if the previous milestone has just completed with a passing full `python -m pytest`.
+
+12. Operating loop
+
+   Include a numbered loop covering:
+
+   - identify current milestone
+   - read full milestone definition
+   - implement only that milestone
+   - preserve traceability to backlog/source ID
+   - add/update relevant code, schemas, services, migrations, APIs, UI links, scripts, config, docs, tests
+   - preserve security controls
+   - run focused tests
+   - fix and retest
+   - run full suite once
+   - update docs
+   - commit and push
+   - record checkpoint note
+   - continue to next milestone or security review gate
+
+13. Security controls
+
+   Include baseline Project443 controls:
+
+   - explicit auth on every new non-health route
+   - mutating routes reject viewer-only users
+   - admin-only routes reject viewer/operator users
+   - workspace-scoped data enforces workspace_id
+   - do not expose or persist secrets, tokens, API keys, webhook URLs, raw payloads, filesystem paths, connector secrets, model internals, note content, or sensitive operational internals
+   - startup/config validation fails safely
+   - connector and provider health payloads are redacted
+   - production-capable settings must not fail open
+   - AI review, confidence, provenance, and writeback controls remain intact
+
+   Add any extra security controls from the supplied document.
+
+14. Focused test guidance
+
+   Extract specific test expectations from the supplied document.
+
+   Also include generic expectations:
+
+   - regression test for the backlog finding
+   - happy path
+   - validation failures
+   - unauthorized/wrong-role/allowed-role
+   - workspace isolation
+   - migration compatibility
+   - fresh database bootstrap if relevant
+   - redaction
+   - error handling
+   - backwards compatibility
+
+15. Security review gates
+
+   If the document specifies review gates, reproduce them exactly.
+
+   If the document does not specify review gates, add:
+
+   Perform a mandatory security review after every 5 completed milestones and at the final milestone.
+
+   Security review output path:
+
+   docs/security/security_review_after_milestone_<N>_<YYYY-MM-DD>.md
+
+   Include the full standard security review structure:
+
+   - Scope
+   - Standards Reference
+   - Executive Summary
+   - Findings
+   - Regression Review
+   - Route and Operation Security Matrix
+   - Workspace Isolation Review
+   - Connector / Provider / AI Review where applicable
+   - Supply Chain / Deployment Review
+   - Test Evidence
+   - Recommendations
+   - Assumptions
+
+16. Milestone-specific requirements
+
+   For each milestone in the document, include a subsection:
+
+   Milestone <N> - <Title>
+
+   Backlog/source ID: <ID if present>
+
+   Implement and verify:
+
+   - all deliverables from the document
+
+   Acceptance criteria:
+
+   - all acceptance criteria from the document
+
+   Security controls:
+
+   - all milestone-specific controls from the document
+
+   Dependencies or out-of-scope items:
+
+   - include if present
+
+17. General rules
+
+   Include:
+
+   - work strictly one milestone at a time
+   - do not batch multiple milestones into one commit
+   - do not batch a security review into a feature milestone commit
+   - do not skip focused tests
+   - do not skip full suite
+   - do not rewrite old tests to hide broken implementation
+   - keep repo green and pushed after every milestone
+   - include git commit/push command after every build milestone response
+
+18. Specific first task
+
+   Start with the first incomplete milestone in the supplied document.
+
+   Include that milestone’s deliverables explicitly.
+
+19. Begin now
+
+   End with:
+
+   Begin now with Milestone <N>.
+
+Commit pattern to include in the generated prompt:
+
+git status
+git add .
+git commit -m "Add Milestone <N> <short milestone name>" -m "<Detailed summary of what was added, including backlog/source ID, code changes, tests, workspace_id handling, security controls, compatibility fixes, and documentation updates.>"
+git push
+
+Style requirements:
+
+- Output only the final generated Codex prompt.
+- Use a single fenced text block.
+- Make it copy/paste ready.
+- Be specific, not generic.
+- Preserve exact milestone numbering and names from the source document.
+- Include all acceptance criteria and security controls from the source document.
