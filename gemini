@@ -1,0 +1,319 @@
+Create an autonomous Gemini CLI implementation prompt from the supplied milestone or roadmap document.
+
+Purpose:
+
+Convert the supplied roadmap/milestone/backlog document into a complete Gemini CLI-ready implementation prompt using the Project443-DigitalTwin delivery pattern.
+
+The generated prompt must be precise, traceable, and implementation-ready.
+
+It must instruct Gemini CLI to:
+
+- work one milestone at a time
+- preserve all existing security controls
+- run focused tests
+- run the full test suite
+- commit and push after each milestone
+- continue automatically unless a defined stop condition is met
+- perform mandatory security review gates
+- preserve exact milestone requirements from the supplied document
+
+Input document rules:
+
+Use the supplied milestone or roadmap document as the only source of truth.
+
+Do not infer extra milestones.
+Do not omit milestones.
+Do not merge milestones.
+Do not rename milestones.
+Do not simplify acceptance criteria.
+Do not weaken security controls.
+Do not generalise specific requirements into vague statements.
+
+If the document has backlog IDs, preserve them exactly.
+
+If the document has dependencies, preserve them exactly.
+
+If the document has out-of-scope items, preserve them exactly.
+
+Output required:
+
+Produce one complete copy/paste-ready prompt for Gemini CLI.
+
+The generated prompt must include the following sections in order:
+
+1. Opening instruction
+
+Use this pattern:
+
+Continue Project443-DigitalTwin <roadmap theme> milestone delivery autonomously.
+
+2. Working directory
+
+Default to:
+
+C:\dev\Project443-DigitalTwin\digital-twin-starter
+
+unless the source document explicitly says otherwise.
+
+3. Repository boundary
+
+Include:
+
+This is Project443-DigitalTwin work.
+
+Do not make changes in:
+
+C:\dev\Project443-DigitalTwin\Transcripty
+
+Do all work only in:
+
+C:\dev\Project443-DigitalTwin\digital-twin-starter
+
+4. Primary objective
+
+Summarise the roadmap objective in 1-3 paragraphs using only information from the source document.
+
+5. Source of truth
+
+Name the supplied document.
+
+6. Exact milestone order
+
+Extract every milestone from the document.
+
+For each milestone include:
+
+- milestone number
+- title
+- backlog/source ID, if present
+- dependency, if present
+
+7. Gemini continuation instruction
+
+Include this exact block:
+
+Important Gemini CLI behaviour instruction:
+
+Do not stop after completing, summarising, committing, or pushing a milestone.
+
+A completion summary is not the end of the task. A completion summary is only a checkpoint before immediately starting the next milestone.
+
+A security review summary is not the end of the task. A security review summary is only a checkpoint before immediately starting the next milestone, provided continuation is approved.
+
+After each successful `git push`, immediately continue with the next milestone or mandatory security review gate without waiting for user input.
+
+Do not ask for confirmation unless a stop condition is met.
+
+8. Stop conditions
+
+Include:
+
+Stop only if:
+
+1. all milestones in the supplied roadmap are complete
+2. a full test suite failure cannot be fixed safely without clarification
+3. a requirement is missing or ambiguous enough that implementation would be guesswork
+4. git push fails due to remote conflicts or authentication
+5. a change would require a major architecture decision outside the roadmap
+6. a proposed implementation would weaken completed security controls
+7. a security review identifies a Critical or High finding that cannot be fixed safely without clarification
+
+9. Continue conditions
+
+Include:
+
+Do not stop merely because:
+
+- one milestone is finished
+- two or three milestones are finished
+- five milestones are finished
+- a security review was completed
+- a full test suite passed
+- a commit was created
+- a push succeeded
+- a completion note was written
+- the next milestone was selected
+
+Those are continue conditions, not stop conditions.
+
+10. Pre-flight
+
+Include:
+
+1. run `git status`
+2. confirm working directory
+3. confirm configured remote
+4. read the supplied roadmap
+5. identify the last completed milestone
+6. identify the next incomplete milestone
+7. check whether previous committed milestone had a passing full test suite
+8. run baseline only if previous full-suite status cannot be confirmed
+
+11. No repeated baseline rule
+
+Include:
+
+Do not run another full baseline `python -m pytest` before starting the next milestone if the previous milestone has just completed with a passing full `python -m pytest`.
+
+Only rerun a pre-milestone baseline if:
+
+- the repo was changed externally
+- the branch changed
+- a pull/merge occurred
+- Gemini CLI restarted and cannot confirm the previous full test result
+- the previous milestone did not finish with a passing full suite
+
+12. Operating loop
+
+Include a numbered loop requiring Gemini CLI to:
+
+1. identify current milestone
+2. read the full milestone definition
+3. implement only that milestone
+4. preserve backlog/source ID traceability
+5. update all required files and docs
+6. preserve security controls
+7. add focused tests
+8. run focused tests
+9. fix and retest
+10. run full suite once
+11. update documentation
+12. commit and push
+13. write checkpoint note
+14. immediately continue to next milestone or security review gate
+
+13. Security controls
+
+Include baseline Project443 security controls:
+
+- explicit auth on every new non-health route
+- mutating routes reject viewer-only users
+- admin-only routes reject viewer/operator users
+- workspace-scoped data enforces workspace_id
+- no secrets, tokens, API keys, webhook URLs, raw payloads, filesystem paths, connector secrets, model internals, note content, or sensitive operational internals are exposed
+- no sensitive material is persisted in logs, audit records, connector items, notification records, status responses, health responses, or test output unless redacted
+- startup/config validation fails safely
+- connector/provider health payloads are redacted
+- production-capable settings must not fail open
+- AI review, confidence, provenance, and writeback controls remain intact
+
+Also include any security controls from the source document exactly.
+
+14. Focused test requirements
+
+Extract all test-related requirements from the source document.
+
+Also include generic test categories where relevant:
+
+- regression test for the backlog finding
+- happy path
+- validation failures
+- unauthorized request rejected
+- wrong-role request rejected
+- correct-role request allowed
+- workspace isolation
+- migration compatibility
+- redaction
+- error handling
+- backwards compatibility
+
+15. Security review gates
+
+If the source document specifies gates, reproduce them exactly.
+
+If the source document does not specify gates, add:
+
+Mandatory security review gates:
+
+Perform a mandatory security review after every 5 completed milestones and at the final milestone.
+
+Security review output path:
+
+docs/security/security_review_after_milestone_<N>_<YYYY-MM-DD>.md
+
+Security review structure:
+
+# Security Review After Milestone <N> - <YYYY-MM-DD>
+
+## Scope
+## Standards Reference
+## Executive Summary
+## Findings
+## Regression Review
+## Route and Operation Security Matrix
+## Workspace Isolation Review
+## Connector / Provider / AI Review
+## Supply Chain / Deployment Review
+## Test Evidence
+## Recommendations
+## Assumptions
+
+16. Milestone-specific sections
+
+For every milestone in the source document, include a dedicated section:
+
+Milestone <N> - <Title>
+
+Backlog/source ID: <ID if present>
+
+Implement and verify:
+
+- exact deliverables from the source document
+
+Acceptance criteria:
+
+- exact acceptance criteria from the source document
+
+Security controls:
+
+- exact milestone-specific security controls from the source document
+
+Dependencies:
+
+- exact dependencies from the source document, if present
+
+Out of scope:
+
+- exact out-of-scope items from the source document, if present
+
+17. Commit pattern
+
+Include:
+
+git status
+git add .
+git commit -m "Add Milestone <N> <short milestone name>" -m "<Detailed summary of what was added, including backlog/source ID, code changes, tests, workspace_id handling, security controls, compatibility fixes, and documentation updates.>"
+git push
+
+18. General rules
+
+Include:
+
+- work strictly one milestone at a time
+- do not batch multiple milestones into one commit
+- do not batch a security review into a feature milestone commit
+- do not skip focused tests
+- do not skip full suite
+- do not rewrite old tests to hide broken implementation
+- keep repo green and pushed after every milestone
+- include the git commit/push command after every build milestone response
+
+19. First task
+
+Start with the first incomplete milestone from the supplied document.
+
+Include its deliverables explicitly.
+
+20. End instruction
+
+End with:
+
+Begin now with Milestone <N>.
+
+Output format:
+
+- Output only the final generated Gemini CLI prompt.
+- Use one fenced text block.
+- Make it copy/paste ready.
+- Preserve exact numbering, names, backlog IDs, dependencies, acceptance criteria, and security controls.
+- Do not add commentary before or after the prompt.
